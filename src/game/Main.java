@@ -10,11 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 public class Main extends Application {
-	// constants
-	public static final int APP_WIDTH = 500;
-	public static final int APP_HEIGHT = 500;
-	public static final int TOP_HEIGHT = 100;
-	public static final int TILE_BOARD_HEIGHT = 400;
 	
 	TopContent top;
 	Board board;
@@ -26,7 +21,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane mainPane = new BorderPane();
-		Scene scene = new Scene(mainPane, APP_WIDTH, APP_HEIGHT);
+		Scene scene = new Scene(mainPane, Constants.APP_WIDTH, Constants.APP_HEIGHT);
 		
 		initalizeTopLayout(mainPane);
 		initalizeBoardLayout(mainPane);
