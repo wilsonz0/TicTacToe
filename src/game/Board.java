@@ -19,6 +19,7 @@ public class Board {
 		addAllTiles();
 	}
 	
+	// helper method: initialize all the tiles into the the board array 
 	private void addAllTiles() {
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
@@ -36,7 +37,9 @@ public class Board {
 		return pane;
 	}
 	
-	
+	/*
+	 * Defines a Tile class which describes the individual boxes in a tic-tac-toe board  
+	 */
 	private class Tile {
 		private StackPane pane;
 		
