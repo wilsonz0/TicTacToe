@@ -38,11 +38,53 @@ public class Board {
 		return pane;
 	}
 	
+	public void checkForWin() {
+		checkRows();
+		checkCols();
+		checkDiagonals();
+	}
+	
+	public void checkRows() {
+		for (int i = 0; i < 3; i++) {
+			if (board[i][0].getMove().equals(board[i][1].getMove())
+					&& board[i][0].getMove().equals(board[i][2].getMove()) 
+					&& !board[i][0].getMove().isEmpty() ) {
+				System.out.println("someone won on the ROWS!");
+			}
+		}
+	}
+	
+	public void checkCols() {
+		for (int i = 0; i < 3; i++) {
+			if (board[0][i].getMove().equals(board[1][i].getMove())
+					&& board[0][i].getMove().equals(board[2][i].getMove()) 
+					&& !board[0][i].getMove().isEmpty() ) {
+				System.out.println("someone won on the COLUMNS!");
+			}
+		}
+	}
+	
+	public void checkDiagonals() {
+		// Top Left to Bottom Right Diagonal		
+		if (board[0][0].getMove().equals(board[1][1].getMove())
+				&& board[0][0].getMove().equals(board[2][2].getMove()) 
+				&& !board[0][0].getMove().isEmpty() ) {
+			System.out.println("someone won on the DIAGONALS of TL -> BR!");
+		}
+		
+		// Top Right to Bottom Left Diagonal
+		if (board[0][2].getMove().equals(board[1][1].getMove())
+				&& board[0][2].getMove().equals(board[2][0].getMove()) 
+				&& !board[0][2].getMove().isEmpty() ) {
+			System.out.println("someone won on the DIAGONALS of TR -> BL!");
+		}
+	}
+	
 	/*
 	 * Defines a Tile class which describes the individual boxes in a tic-tac-toe board  
 	 */
 	private class Tile {
-		Label move;
+		private Label move;
 		private StackPane pane;
 		
 		public Tile() {			
@@ -65,11 +107,17 @@ public class Board {
 					move.setText("O");
 				}
 				turn = !turn;
+				
+				checkForWin();
 			});
 		}
 		
 		public StackPane getStackPane() {
 			return pane;
+		}
+		
+		public String getMove() {
+			return move.getText();
 		}
 	}
 }
