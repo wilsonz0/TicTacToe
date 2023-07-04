@@ -4,12 +4,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 // will represent the Tic-Tac-Toe Board
 public class Board {
-	private Tile[][] board = new Tile[3][3];;
+	private Tile[][] board = new Tile[3][3];
 	private StackPane pane;
 	private boolean turn = true;	// True: Player 1, False: Player 2 
+	private boolean gameEnded = false;
 	
 	public Board() {
 		pane = new StackPane();
@@ -38,38 +40,45 @@ public class Board {
 		return pane;
 	}
 	
-	public void checkForWin() {
-		checkRows();
-		checkCols();
-		checkDiagonals();
+	// method: checks for the 3 win conditions of the game	
+	public boolean checkForWin() {
+		return checkRows() || checkCols() || checkDiagonals();
 	}
 	
-	public void checkRows() {
+	// helper method: check for the win condition for all the rows	
+	private boolean checkRows() {
 		for (int i = 0; i < 3; i++) {
 			if (board[i][0].getMove().equals(board[i][1].getMove())
 					&& board[i][0].getMove().equals(board[i][2].getMove()) 
 					&& !board[i][0].getMove().isEmpty() ) {
 				System.out.println("someone won on the ROWS!");
+				return true;
 			}
 		}
+		return false;
 	}
-	
-	public void checkCols() {
+
+	// helper method: check for the win condition for all the columns
+	private boolean checkCols() {
 		for (int i = 0; i < 3; i++) {
 			if (board[0][i].getMove().equals(board[1][i].getMove())
 					&& board[0][i].getMove().equals(board[2][i].getMove()) 
 					&& !board[0][i].getMove().isEmpty() ) {
 				System.out.println("someone won on the COLUMNS!");
+				return true;
 			}
 		}
+		return false;
 	}
 	
-	public void checkDiagonals() {
+	// helper method: check for the win condition for the only 2 diagonals
+	private boolean checkDiagonals() {
 		// Top Left to Bottom Right Diagonal		
 		if (board[0][0].getMove().equals(board[1][1].getMove())
 				&& board[0][0].getMove().equals(board[2][2].getMove()) 
 				&& !board[0][0].getMove().isEmpty() ) {
 			System.out.println("someone won on the DIAGONALS of TL -> BR!");
+			return true;
 		}
 		
 		// Top Right to Bottom Left Diagonal
@@ -77,7 +86,9 @@ public class Board {
 				&& board[0][2].getMove().equals(board[2][0].getMove()) 
 				&& !board[0][2].getMove().isEmpty() ) {
 			System.out.println("someone won on the DIAGONALS of TR -> BL!");
+			return true;
 		}
+		return false;
 	}
 	
 	/*
@@ -97,18 +108,21 @@ public class Board {
 			pane.getChildren().add(border);
 			
 			move = new Label("");
+			move.setFont(Font.font(50));
 			pane.getChildren().add(move);
 			
 			pane.setOnMouseClicked(e -> {
-				if (turn) {
-					move.setText("X"); 
-				}
-				else {
-					move.setText("O");
+				if (move.getText().isEmpty() && !gameEnded) {
+					if (turn) {
+						move.setText("X"); 
+					}
+					else {
+						move.setText("O");
+					}
 				}
 				turn = !turn;
 				
-				checkForWin();
+				if (checkForWin()) gameEnded = true;
 			});
 		}
 		
