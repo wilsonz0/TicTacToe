@@ -25,6 +25,8 @@ public class Main extends Application {
 		
 		initalizeTopLayout(mainPane);
 		initalizeBoardLayout(mainPane);
+		
+		top.setStartButton(board);
 
 		primaryStage.setTitle("Tic Tac Toe");
 		primaryStage.setScene(scene);
@@ -34,7 +36,6 @@ public class Main extends Application {
 	private void initalizeTopLayout(BorderPane mainPane) {
 		top = new TopContent();
 		mainPane.getChildren().add(top.getStackPane());
-		
 	}
 	
 	private void initalizeBoardLayout(BorderPane mainPane) {

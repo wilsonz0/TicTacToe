@@ -12,6 +12,7 @@ public class TopContent {
 	private Button startGame;
 	
 	private Label title;
+	private Label playerTurn;
 	
 	public TopContent() {
 		pane = new StackPane();
@@ -29,10 +30,17 @@ public class TopContent {
 		startGame = new Button("Start");
 		startGame.setMinSize(100, 30);
 		startGame.setTranslateY(30);
+		
 		pane.getChildren().add(startGame);
 	}
 	
 	public StackPane getStackPane() {
 		return pane;
+	}
+	
+	public void setStartButton(Board board) {
+		startGame.setOnAction(e -> {
+			if (!board.getGameStatus()) board.startGame();
+		});
 	}
 }
