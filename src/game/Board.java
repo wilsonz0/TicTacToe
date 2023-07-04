@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 public class Board {
 	private Tile[][] board = new Tile[3][3];;
 	private StackPane pane;
+	private boolean turn = true;	// True: Player 1, False: Player 2 
 	
 	public Board() {
 		pane = new StackPane();
@@ -41,6 +42,7 @@ public class Board {
 	 * Defines a Tile class which describes the individual boxes in a tic-tac-toe board  
 	 */
 	private class Tile {
+		Label move;
 		private StackPane pane;
 		
 		public Tile() {			
@@ -51,6 +53,19 @@ public class Board {
 			border.setFill(Color.TRANSPARENT);
 			border.setStroke(Color.BLACK);
 			pane.getChildren().add(border);
+			
+			move = new Label("");
+			pane.getChildren().add(move);
+			
+			pane.setOnMouseClicked(e -> {
+				if (turn) {
+					move.setText("X"); 
+				}
+				else {
+					move.setText("O");
+				}
+				turn = !turn;
+			});
 		}
 		
 		public StackPane getStackPane() {
