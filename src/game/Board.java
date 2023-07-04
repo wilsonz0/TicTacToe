@@ -11,7 +11,7 @@ public class Board {
 	private Tile[][] board = new Tile[3][3];
 	private StackPane pane;
 	private boolean turn = true;	// True: Player 1, False: Player 2 
-	private boolean gameEnded = false;
+	private boolean gameStatus = false;
 	
 	public Board() {
 		pane = new StackPane();
@@ -34,10 +34,6 @@ public class Board {
 				board[row][col] = tile;
 			}
 		}
-	}
-	
-	public StackPane getStackPane() {
-		return pane;
 	}
 	
 	// method: checks for the 3 win conditions of the game	
@@ -91,6 +87,18 @@ public class Board {
 		return false;
 	}
 	
+	public StackPane getStackPane() {
+		return pane;
+	}
+	
+	public void startGame() {
+		gameStatus = true;
+	}
+	
+	public boolean getGameStatus() {
+		return gameStatus;
+	}
+	
 	/*
 	 * Defines a Tile class which describes the individual boxes in a tic-tac-toe board  
 	 */
@@ -111,18 +119,19 @@ public class Board {
 			move.setFont(Font.font(50));
 			pane.getChildren().add(move);
 			
+			// TODO: (BUG) I can just click O 3 times if I click the same square twice			
 			pane.setOnMouseClicked(e -> {
-				if (move.getText().isEmpty() && !gameEnded) {
+				if (move.getText().isEmpty() && gameStatus) {
 					if (turn) {
 						move.setText("X"); 
 					}
 					else {
 						move.setText("O");
 					}
+					turn = !turn;
 				}
-				turn = !turn;
 				
-				if (checkForWin()) gameEnded = true;
+				if (checkForWin()) gameStatus = false;
 			});
 		}
 		
