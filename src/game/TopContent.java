@@ -21,14 +21,14 @@ public class TopContent {
 		
 		title = new Label("Tic-Tac-Toe");
 		title.setMinSize(Constants.APP_WIDTH, Constants.TOP_HEIGHT);
-		title.setTranslateY(Constants.TOP_HEIGHT / 2 - 80);
+		title.setTranslateY(Constants.TOP_HEIGHT / 2 - 70);
 		title.setAlignment(Pos.CENTER);
 		title.setFont(Font.font(25));
 		pane.getChildren().add(title);
 		
 		startGame = new Button("Start");
 		startGame.setMinSize(100, 30);
-		startGame.setTranslateY(10);
+		startGame.setTranslateY(30);
 		pane.getChildren().add(startGame);
 	}
 	
