@@ -3,6 +3,7 @@ package game;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
@@ -13,6 +14,7 @@ public class Board {
 	private boolean turn = true;	// True: Player 1, False: Player 2
 	private int numOfMoves = 1;
 	private boolean gameStatus = false;
+	private Line winLine; 
 	
 	public Board() {
 		pane = new StackPane();
@@ -21,6 +23,12 @@ public class Board {
 		pane.setTranslateY((Constants.BOARD_HEIGHT / 2) + Constants.TOP_HEIGHT);
 		
 		addAllTiles();
+		
+		winLine = new Line();
+		winLine.setStrokeWidth(7);
+		winLine.setStroke(Color.RED);
+		pane.getChildren().add(winLine);
+		winLine.setVisible(false);
 	}
 	
 	// helper method: initialize all the tiles into the the board array 
@@ -37,7 +45,7 @@ public class Board {
 		}
 	}
 	
-	// method: checks for the 3 win conditions of the game	
+	// main method: checks for the 3 win conditions of the game	
 	public boolean checkForWin() {
 		return checkRows() || checkCols() || checkDiagonals();
 	}
@@ -49,6 +57,7 @@ public class Board {
 					&& board[i][0].getMove().equals(board[i][2].getMove()) 
 					&& !board[i][0].getMove().isEmpty() ) {
 				System.out.println("someone won on the ROWS!");
+				drawWinLine(board[i][0], board[i][1], board[i][2]);
 				return true;
 			}
 		}
@@ -62,6 +71,7 @@ public class Board {
 					&& board[0][i].getMove().equals(board[2][i].getMove()) 
 					&& !board[0][i].getMove().isEmpty() ) {
 				System.out.println("someone won on the COLUMNS!");
+				drawWinLine(board[0][i], board[1][i], board[2][i]);
 				return true;
 			}
 		}
@@ -75,6 +85,7 @@ public class Board {
 				&& board[0][0].getMove().equals(board[2][2].getMove()) 
 				&& !board[0][0].getMove().isEmpty() ) {
 			System.out.println("someone won on the DIAGONALS of TL -> BR!");
+			drawWinLine(board[0][0], board[1][1], board[2][2]);
 			return true;
 		}
 		
@@ -83,11 +94,13 @@ public class Board {
 				&& board[0][2].getMove().equals(board[2][0].getMove()) 
 				&& !board[0][2].getMove().isEmpty() ) {
 			System.out.println("someone won on the DIAGONALS of TR -> BL!");
+			drawWinLine(board[0][2], board[1][1], board[2][0]);
 			return true;
 		}
 		return false;
 	}
 	
+	// main method: after 9 moves, there will be a tie iff there are no wins (handled in Tile class)
 	private boolean checkForTie() {
 		if (numOfMoves == 9) {
 			System.out.println("TIE"); 
@@ -97,6 +110,17 @@ public class Board {
 		
 		numOfMoves++;
 		return false;
+	}
+	
+	public void drawWinLine(Tile first, Tile second, Tile third) {
+		winLine.setVisible(true);
+		winLine.setStartX(first.getStackPane().getTranslateX());
+		winLine.setStartY(first.getStackPane().getTranslateY());
+		winLine.setEndX(third.getStackPane().getTranslateX());
+		winLine.setEndY(third.getStackPane().getTranslateY());
+		winLine.setTranslateX(second.getStackPane().getTranslateX());
+		winLine.setTranslateY(second.getStackPane().getTranslateY());
+		
 	}
 	
 	public StackPane getStackPane() {
@@ -141,7 +165,7 @@ public class Board {
 					}
 					turn = !turn;
 					
-					if (checkForTie() && checkForWin()) gameStatus = false;
+					if (checkForWin() || checkForTie()) gameStatus = false;
 				}
 			});
 		}
