@@ -10,7 +10,8 @@ import javafx.scene.text.Font;
 public class Board {
 	private Tile[][] board = new Tile[3][3];
 	private StackPane pane;
-	private boolean turn = true;	// True: Player 1, False: Player 2 
+	private boolean turn = true;	// True: Player 1, False: Player 2
+	private int numOfMoves = 1;
 	private boolean gameStatus = false;
 	
 	public Board() {
@@ -87,6 +88,17 @@ public class Board {
 		return false;
 	}
 	
+	private boolean checkForTie() {
+		if (numOfMoves == 9) {
+			System.out.println("TIE"); 
+			return true;
+		}
+		System.out.println(numOfMoves); 
+		
+		numOfMoves++;
+		return false;
+	}
+	
 	public StackPane getStackPane() {
 		return pane;
 	}
@@ -118,8 +130,7 @@ public class Board {
 			move = new Label("");
 			move.setFont(Font.font(50));
 			pane.getChildren().add(move);
-			
-			// TODO: (BUG) I can just click O 3 times if I click the same square twice			
+				
 			pane.setOnMouseClicked(e -> {
 				if (move.getText().isEmpty() && gameStatus) {
 					if (turn) {
@@ -129,9 +140,9 @@ public class Board {
 						move.setText("O");
 					}
 					turn = !turn;
+					
+					if (checkForTie() && checkForWin()) gameStatus = false;
 				}
-				
-				if (checkForWin()) gameStatus = false;
 			});
 		}
 		
