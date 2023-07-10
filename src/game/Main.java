@@ -11,7 +11,7 @@ import javafx.scene.layout.StackPane;
 
 public class Main extends Application {
 	
-	TopContent top;
+	TopContent topContent;
 	Board board;
 	
 	public static void main(String[] args) {
@@ -26,7 +26,7 @@ public class Main extends Application {
 		initalizeTopLayout(mainPane);
 		initalizeBoardLayout(mainPane);
 		
-		top.setStartButton(board);
+		topContent.setStartButton(board);
 
 		primaryStage.setTitle("Tic Tac Toe");
 		primaryStage.setScene(scene);
@@ -34,12 +34,12 @@ public class Main extends Application {
 	}
 
 	private void initalizeTopLayout(BorderPane mainPane) {
-		top = new TopContent();
-		mainPane.getChildren().add(top.getStackPane());
+		topContent = new TopContent();
+		mainPane.getChildren().add(topContent.getStackPane());
 	}
 	
 	private void initalizeBoardLayout(BorderPane mainPane) {
-		board = new Board();
+		board = new Board(topContent);
 		mainPane.getChildren().add(board.getStackPane());
 	}
 }

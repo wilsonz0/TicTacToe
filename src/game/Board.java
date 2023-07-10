@@ -9,6 +9,7 @@ import javafx.scene.text.Font;
 
 // will represent the Tic-Tac-Toe Board
 public class Board {
+	private TopContent topContent;
 	private Tile[][] board = new Tile[3][3];
 	private StackPane pane;
 	private boolean turn = true;	// True: Player 1, False: Player 2
@@ -16,7 +17,9 @@ public class Board {
 	private boolean gameStatus = false;
 	private Line winLine; 
 	
-	public Board() {
+	public Board(TopContent topContent) {
+		this.topContent = topContent;
+		
 		pane = new StackPane();
 		pane.setMinSize(Constants.APP_WIDTH, Constants.BOARD_HEIGHT);
 		pane.setTranslateX(Constants.APP_WIDTH / 2);
@@ -45,9 +48,25 @@ public class Board {
 		}
 	}
 	
+	// main method: after 9 moves, there will be a tie iff there are no wins (handled in Tile class)
+	private boolean checkForTie() {
+		if (numOfMoves == 9) {
+			topContent.setTitle("A TIE!");
+			return true;
+		}
+		System.out.println(numOfMoves); 
+		
+		numOfMoves++;
+		return false;
+	}
+	
 	// main method: checks for the 3 win conditions of the game	
 	public boolean checkForWin() {
-		return checkRows() || checkCols() || checkDiagonals();
+		if (checkRows() || checkCols() || checkDiagonals()) {
+			topContent.setTitle("Player " + turn + " wins!");
+			return true;
+		}
+		return false;
 	}
 	
 	// helper method: check for the win condition for all the rows	
@@ -100,18 +119,6 @@ public class Board {
 		return false;
 	}
 	
-	// main method: after 9 moves, there will be a tie iff there are no wins (handled in Tile class)
-	private boolean checkForTie() {
-		if (numOfMoves == 9) {
-			System.out.println("TIE"); 
-			return true;
-		}
-		System.out.println(numOfMoves); 
-		
-		numOfMoves++;
-		return false;
-	}
-	
 	public void drawWinLine(Tile first, Tile second, Tile third) {
 		winLine.setVisible(true);
 		winLine.setStartX(first.getStackPane().getTranslateX());
@@ -129,6 +136,8 @@ public class Board {
 	
 	public void startGame() {
 		gameStatus = true;
+		topContent.setButtonVisibility(false);
+		topContent.setTitle("Player X's turn");
 	}
 	
 	public boolean getGameStatus() {
@@ -159,9 +168,11 @@ public class Board {
 				if (move.getText().isEmpty() && gameStatus) {
 					if (turn) {
 						move.setText("X"); 
+						topContent.setTitle("Player O's turn");
 					}
 					else {
 						move.setText("O");
+						topContent.setTitle("Player X's turn");
 					}
 					turn = !turn;
 					

@@ -12,7 +12,6 @@ public class TopContent {
 	private Button startGame;
 	
 	private Label title;
-	private Label playerTurn;
 	
 	public TopContent() {
 		pane = new StackPane();
@@ -36,6 +35,14 @@ public class TopContent {
 	
 	public StackPane getStackPane() {
 		return pane;
+	}
+	
+	public void setTitle(String str) {
+		title.setText(str);
+	}
+	
+	public void setButtonVisibility(boolean bool) {
+		startGame.setVisible(bool);
 	}
 	
 	public void setStartButton(Board board) {
