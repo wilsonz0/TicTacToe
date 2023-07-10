@@ -137,6 +137,21 @@ public class Board {
 		gameStatus = true;
 		topContent.setButtonVisibility(false);
 		topContent.setTitle("Player X's turn");
+		
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 3; col++) {
+				board[row][col].setMove("");
+			}
+		}
+		
+		winLine.setVisible(false);
+	}
+	
+	public void endGame() {
+		gameStatus = false;
+		numOfMoves = 1;
+		topContent.setButtonVisibility(true);
+		topContent.setTitle("Tic-Tac-Toe");
 	}
 	
 	public boolean getGameStatus() {
@@ -145,6 +160,21 @@ public class Board {
 	
 	public StackPane getStackPane() {
 		return pane;
+	}
+	
+	/*
+	 * DEBUGGING PURPOSE
+	 */
+	public void printBoard() {
+		for (int row = 0; row < 3; row++) {
+			System.out.print("[");
+			for (int col = 0; col < 3; col++) {
+				System.out.print( board[row][col].getMove() );
+				
+				if (col < 2) System.out.print( ", " );
+			}
+			System.out.println("]");
+		}
 	}
 	
 	/*
@@ -180,7 +210,7 @@ public class Board {
 						topContent.setTitle("Player X's turn");
 					}
 					
-					if (checkForWin() || checkForTie()) gameStatus = false;
+					if (checkForWin() || checkForTie()) endGame();
 					
 					turn = turn == 'X' ? 'O' : 'X';
 				}
@@ -189,6 +219,10 @@ public class Board {
 		
 		public StackPane getStackPane() {
 			return pane;
+		}
+		
+		public void setMove(String s) {
+			move.setText(s);
 		}
 		
 		public String getMove() {
