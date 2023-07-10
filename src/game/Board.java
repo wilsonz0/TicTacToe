@@ -12,7 +12,7 @@ public class Board {
 	private TopContent topContent;
 	private Tile[][] board = new Tile[3][3];
 	private StackPane pane;
-	private boolean turn = true;	// True: Player 1, False: Player 2
+	private char turn = 'X';
 	private int numOfMoves = 1;
 	private boolean gameStatus = false;
 	private Line winLine; 
@@ -166,17 +166,20 @@ public class Board {
 				
 			pane.setOnMouseClicked(e -> {
 				if (move.getText().isEmpty() && gameStatus) {
-					if (turn) {
+					if (turn == 'X') {
 						move.setText("X"); 
+						
 						topContent.setTitle("Player O's turn");
 					}
 					else {
 						move.setText("O");
+						
 						topContent.setTitle("Player X's turn");
 					}
-					turn = !turn;
 					
 					if (checkForWin() || checkForTie()) gameStatus = false;
+					
+					turn = turn == 'X' ? 'O' : 'X';
 				}
 			});
 		}
