@@ -10,12 +10,13 @@ import javafx.scene.text.Font;
 // will represent the Tic-Tac-Toe Board
 public class Board {
 	private TopContent topContent;
-	private Tile[][] board = new Tile[3][3];
 	private StackPane pane;
+	
+	private Tile[][] board = new Tile[3][3];
 	private char turn = 'X';
-	private int numOfMoves = 1;
-	private boolean gameStatus = false;
-	private Line winLine; 
+	private int numOfMoves = 1;				// (for checking ties) count the moves until 9 moves
+	private boolean gameStatus = false;		// true: game is active, false: game is stopped
+	private Line winLine;
 	
 	public Board(TopContent topContent) {
 		this.topContent = topContent;
@@ -133,6 +134,7 @@ public class Board {
 		
 	}
 	
+	// main method: allows the game to start and restart
 	public void startGame() {
 		gameStatus = true;
 		topContent.setButtonVisibility(false);
@@ -147,6 +149,7 @@ public class Board {
 		winLine.setVisible(false);
 	}
 	
+	// main method: will end the game and reset some variables
 	public void endGame() {
 		gameStatus = false;
 		numOfMoves = 1;
