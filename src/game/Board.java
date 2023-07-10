@@ -20,6 +20,7 @@ public class Board {
 	public Board(TopContent topContent) {
 		this.topContent = topContent;
 		
+		// initialize the main board pane  
 		pane = new StackPane();
 		pane.setMinSize(Constants.APP_WIDTH, Constants.BOARD_HEIGHT);
 		pane.setTranslateX(Constants.APP_WIDTH / 2);
@@ -27,6 +28,7 @@ public class Board {
 		
 		addAllTiles();
 		
+		// initialize the win line and hide it
 		winLine = new Line();
 		winLine.setStrokeWidth(7);
 		winLine.setStroke(Color.RED);
@@ -119,6 +121,7 @@ public class Board {
 		return false;
 	}
 	
+	// main method: after one of the player wins, display a line on the winning 3 tiles 
 	public void drawWinLine(Tile first, Tile second, Tile third) {
 		winLine.setVisible(true);
 		winLine.setStartX(first.getStackPane().getTranslateX());
@@ -130,10 +133,6 @@ public class Board {
 		
 	}
 	
-	public StackPane getStackPane() {
-		return pane;
-	}
-	
 	public void startGame() {
 		gameStatus = true;
 		topContent.setButtonVisibility(false);
@@ -142,6 +141,10 @@ public class Board {
 	
 	public boolean getGameStatus() {
 		return gameStatus;
+	}
+	
+	public StackPane getStackPane() {
+		return pane;
 	}
 	
 	/*

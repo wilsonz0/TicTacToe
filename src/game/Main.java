@@ -1,13 +1,9 @@
 package game;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.stage.Stage; // the window that holds the contents
-import javafx.scene.Scene; // the contents
-import javafx.scene.control.Button;
+import javafx.stage.Stage; 				// the window that holds the contents
+import javafx.scene.Scene; 				// the contents
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 
 public class Main extends Application {
 	
