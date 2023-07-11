@@ -1,5 +1,8 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -11,12 +14,12 @@ import javafx.scene.text.Font;
 public class Board {
 	private TopContent topContent;
 	private StackPane pane;
+	private Line winLine;
 	
 	private Tile[][] board = new Tile[3][3];
 	private char turn;
-	private int numOfMoves = 1;				// (for checking ties) count the moves until 9 moves
+	private int numOfMoves;					// (for checking ties) count the moves until 9 moves
 	private boolean gameStatus = false;		// true: game is active, false: game is stopped
-	private Line winLine;
 	
 	public Board(TopContent topContent) {
 		this.topContent = topContent;
@@ -35,6 +38,13 @@ public class Board {
 		winLine.setStroke(Color.RED);
 		pane.getChildren().add(winLine);
 		winLine.setVisible(false);
+	}
+	
+	public Board(Tile[][] board, char turn, int numOfMoves, boolean gameStatus) {
+		this.board = board;
+		this.turn = turn;
+		this.numOfMoves = numOfMoves;
+		this.gameStatus = gameStatus;
 	}
 	
 	// helper method: initialize all the tiles into the the board array 
@@ -138,6 +148,7 @@ public class Board {
 	public void startGame() {
 		gameStatus = true;
 		turn  = 'X';
+		numOfMoves = 1;
 		topContent.setTitle("Player X's turn");
 		topContent.setButtonVisibility(false);
 		
@@ -153,7 +164,6 @@ public class Board {
 	// main method: will end the game and reset some variables
 	public void endGame() {
 		gameStatus = false;
-		numOfMoves = 1;
 		topContent.setButtonVisibility(true);
 		topContent.setTitle("Tic-Tac-Toe");
 	}
@@ -171,6 +181,22 @@ public class Board {
 	
 	public StackPane getStackPane() {
 		return pane;
+	}
+	
+	public ArrayList<Board> getAllPossibleStates(String move) {
+		ArrayList<Board> result = new ArrayList<Board>();
+		
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 3; col++) {
+				if (board[row][col].getMove().equals("")) {
+					Board newBoard = new Board(this.board, this.turn, this.numOfMoves, this.gameStatus);
+					newBoard.board[row][col].setMove(move);
+					result.add(newBoard);
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	/*
