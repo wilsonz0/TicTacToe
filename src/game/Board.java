@@ -13,7 +13,7 @@ public class Board {
 	private StackPane pane;
 	
 	private Tile[][] board = new Tile[3][3];
-	private char turn = 'X';
+	private char turn;
 	private int numOfMoves = 1;				// (for checking ties) count the moves until 9 moves
 	private boolean gameStatus = false;		// true: game is active, false: game is stopped
 	private Line winLine;
@@ -137,8 +137,9 @@ public class Board {
 	// main method: allows the game to start and restart
 	public void startGame() {
 		gameStatus = true;
-		topContent.setButtonVisibility(false);
+		turn  = 'X';
 		topContent.setTitle("Player X's turn");
+		topContent.setButtonVisibility(false);
 		
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
@@ -157,6 +158,9 @@ public class Board {
 		topContent.setTitle("Tic-Tac-Toe");
 	}
 	
+	/*
+	 * A series of getters
+	 */
 	public boolean getGameStatus() {
 		return gameStatus;
 	}
