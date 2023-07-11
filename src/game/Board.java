@@ -52,7 +52,7 @@ public class Board {
 	}
 	
 	// main method: after 9 moves, there will be a tie iff there are no wins (handled in Tile class)
-	private boolean checkForTie() {
+	public boolean checkForTie() {
 		if (numOfMoves == 9) {
 			topContent.setTitle("A TIE!");
 			return true;
@@ -159,6 +159,10 @@ public class Board {
 	
 	public boolean getGameStatus() {
 		return gameStatus;
+	}
+	
+	public char getTurn() {
+		return turn;
 	}
 	
 	public StackPane getStackPane() {
