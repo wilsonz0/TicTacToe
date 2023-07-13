@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.util.Pair;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -45,6 +46,13 @@ public class Board {
 		this.turn = turn;
 		this.numOfMoves = numOfMoves;
 		this.gameStatus = gameStatus;
+	}
+	
+	public Board(Board board) {
+		this.board = board.board;
+		this.turn = board.turn;
+		this.numOfMoves = board.numOfMoves;
+		this.gameStatus = board.gameStatus;
 	}
 	
 	// helper method: initialize all the tiles into the the board array 
@@ -169,6 +177,13 @@ public class Board {
 	}
 	
 	/*
+	 * A series of setters
+	 */
+	public void setMove(int row, int col, String s) {
+		board[row][col].setMove(s);
+	}
+	
+	/*
 	 * A series of getters
 	 */
 	public boolean getGameStatus() {
@@ -183,15 +198,16 @@ public class Board {
 		return pane;
 	}
 	
-	public ArrayList<Board> getAllPossibleStates(String move) {
-		ArrayList<Board> result = new ArrayList<Board>();
+	public ArrayList<int[]> getAllPossibleActions(String move) {
+//		ArrayList<Board> result = new ArrayList<Board>();
+		ArrayList<int[]> result = new ArrayList<int[]>();
 		
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
 				if (board[row][col].getMove().equals("")) {
-					Board newBoard = new Board(this.board, this.turn, this.numOfMoves, this.gameStatus);
-					newBoard.board[row][col].setMove(move);
-					result.add(newBoard);
+//					Board newBoard = new Board(this.board, this.turn, this.numOfMoves, this.gameStatus);
+//					newBoard.board[row][col].setMove(move);
+					result.add(new int[] {row, col});
 				}
 			}
 		}

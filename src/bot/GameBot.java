@@ -1,5 +1,7 @@
 package bot;
 
+import java.util.ArrayList;
+
 import game.Board;
 
 /*
@@ -21,8 +23,9 @@ public class GameBot {
 		if (player == 'O') {
 			// maximize
 			int value = Integer.MIN_VALUE;
+			ArrayList<int[]> coords = board.getAllPossibleActions("O");
 			
-			for ( Board newState : board.getAllPossibleStates("O")) {
+			for ( Board newState : calculateResult(coords, "O") ) {
 				value = Math.max(value, minimax(newState, 'X'));
 			}
 			
@@ -31,13 +34,25 @@ public class GameBot {
 		else {
 			// minimize		
 			int value = Integer.MAX_VALUE;
+			ArrayList<int[]> coords = board.getAllPossibleActions("X");
 			
-			for ( Board newState : board.getAllPossibleStates("X")) {
-				value = Math.max(value, minimax(newState, 'O'));
+			for ( Board newState : calculateResult(coords, "X") ) {
+				value = Math.min(value, minimax(newState, 'O'));
 			}
 			
 			return value;
 		}
+	}
+	
+	private ArrayList<Board> calculateResult(ArrayList<int[]> coord, String s) {
+		ArrayList<Board> result = new ArrayList<Board>();
+		
+		for (int[] arr : coord) {
+			Board newBoard = new Board(board);
+			newBoard.setMove(arr[0], arr[1], s);
+		}
+		
+		return result;
 	}
 	
 	private int calculateValue(Board state) {
