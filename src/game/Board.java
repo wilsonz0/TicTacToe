@@ -2,6 +2,8 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import bot.GameBot;
 import javafx.util.Pair;
 
 import javafx.scene.control.Label;
@@ -22,8 +24,12 @@ public class Board {
 	private int numOfMoves;					// (for checking ties) count the moves until 9 moves
 	private boolean gameStatus = false;		// true: game is active, false: game is stopped
 	
+	GameBot bot;
+	private boolean isBotActive = false;
+	
 	public Board(TopContent topContent) {
 		this.topContent = topContent;
+		bot = new GameBot(this);
 		
 		// initialize the main board pane  
 		pane = new StackPane();
@@ -42,17 +48,28 @@ public class Board {
 	}
 	
 	public Board(Tile[][] board, char turn, int numOfMoves, boolean gameStatus) {
-		this.board = board;
+		for (int row = 0; row < 3; row++) {
+	        for (int col = 0; col < 3; col++) {
+	            this.board[row][col] = new Tile();
+	            this.board[row][col].setMove(board[row][col].getMove());
+	        }
+	    }
 		this.turn = turn;
 		this.numOfMoves = numOfMoves;
 		this.gameStatus = gameStatus;
 	}
 	
 	public Board(Board board) {
-		this.board = board.board;
+		for (int row = 0; row < 3; row++) {
+	        for (int col = 0; col < 3; col++) {
+	            this.board[row][col] = new Tile();
+	            this.board[row][col].setMove(board.board[row][col].getMove());
+	        }
+	    }
 		this.turn = board.turn;
 		this.numOfMoves = board.numOfMoves;
 		this.gameStatus = board.gameStatus;
+		System.out.println("Pane: " + pane);
 	}
 	
 	// helper method: initialize all the tiles into the the board array 
@@ -152,8 +169,25 @@ public class Board {
 		
 	}
 	
+	public void startSingleGame() {
+		gameStatus = true;
+		isBotActive = true;
+		turn  = 'X';
+		numOfMoves = 1;
+		topContent.setTitle("Player X's turn");
+		topContent.setButtonVisibility(false);
+		
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 3; col++) {
+				board[row][col].setMove("");
+			}
+		}
+		
+		winLine.setVisible(false);
+	}
+	
 	// main method: allows the game to start and restart
-	public void startGame() {
+	public void startDoubleGame() {
 		gameStatus = true;
 		turn  = 'X';
 		numOfMoves = 1;
@@ -172,6 +206,7 @@ public class Board {
 	// main method: will end the game and reset some variables
 	public void endGame() {
 		gameStatus = false;
+		isBotActive = false;
 		topContent.setButtonVisibility(true);
 		topContent.setTitle("Tic-Tac-Toe");
 	}
@@ -254,13 +289,17 @@ public class Board {
 				if (move.getText().isEmpty() && gameStatus) {
 					if (turn == 'X') {
 						move.setText("X"); 
-						
 						topContent.setTitle("Player O's turn");
+						
+						if (isBotActive) {
+							System.out.println(bot.getNextMove('O'));
+						}
 					}
 					else {
-						move.setText("O");
-						
-						topContent.setTitle("Player X's turn");
+						if (!isBotActive) {
+							move.setText("O");
+							topContent.setTitle("Player X's turn");
+						}
 					}
 					
 					if (checkForWin() || checkForTie()) endGame();
