@@ -9,7 +9,8 @@ import javafx.scene.text.Font;
 // will be the content above the board
 public class TopContent {
 	private StackPane pane;
-	private Button startGame;
+	private Button singlePlayer;
+	private Button twoPlayer;
 	
 	private Label title;
 	
@@ -26,11 +27,17 @@ public class TopContent {
 		title.setFont(Font.font(25));
 		pane.getChildren().add(title);
 		
-		startGame = new Button("Start");
-		startGame.setMinSize(100, 30);
-		startGame.setTranslateY(30);
+		singlePlayer = new Button("Single Player");
+		singlePlayer.setMinSize(100, 30);
+		singlePlayer.setTranslateX(-60);
+		singlePlayer.setTranslateY(30);
+		pane.getChildren().add(singlePlayer);
 		
-		pane.getChildren().add(startGame);
+		twoPlayer = new Button("Two Player");
+		twoPlayer.setMinSize(100, 30);
+		twoPlayer.setTranslateX(60);
+		twoPlayer.setTranslateY(30);
+		pane.getChildren().add(twoPlayer);
 	}
 	
 	public StackPane getStackPane() {
@@ -42,12 +49,17 @@ public class TopContent {
 	}
 	
 	public void setButtonVisibility(boolean bool) {
-		startGame.setVisible(bool);
+		singlePlayer.setVisible(bool);
+		twoPlayer.setVisible(bool);
 	}
 	
 	public void setStartButton(Board board) {
-		startGame.setOnAction(e -> {
-			if (!board.getGameStatus()) board.startGame();
+		singlePlayer.setOnAction(e -> {
+			if (!board.getGameStatus()) board.startSingleGame();
+		});
+		
+		twoPlayer.setOnAction(e -> {
+			if (!board.getGameStatus()) board.startDoubleGame();
 		});
 	}
 }
