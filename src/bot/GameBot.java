@@ -3,6 +3,7 @@ package bot;
 import java.util.ArrayList;
 
 import game.Board;
+import javafx.util.Pair;
 
 /*
  * This class defines a AI bot that will play against the player.
@@ -17,56 +18,84 @@ public class GameBot {
 		this.board = board;
 	}
 	
-	public int minimax(Board state, char player) {
-		if (isTerminal(state)) return calculateValue(state);
+	public Pair<int[], Integer> getNextMove(char player) {
+		return minimax(board, new int[] {0,0}, player);
+	}
+	
+	private Pair<int[], Integer> minimax(Board state, int[] recentCoord, char player) {
+		if (isTerminal(state)) return calculateValue(state, recentCoord);
 		
 		if (player == 'O') {
 			// maximize
 			int value = Integer.MIN_VALUE;
-			ArrayList<int[]> coords = board.getAllPossibleActions("O");
+			int[] bestCoord = recentCoord;
+			ArrayList<int[]> coords = state.getAllPossibleActions("O");
 			
-			for ( Board newState : calculateResult(coords, "O") ) {
-				value = Math.max(value, minimax(newState, 'X'));
+			for (int[] coord : coords) {
+				Board newState = calculateResult(state, coord, "O");
+//				System.out.println("new state run in player == \"O\"");
+//				newState.printBoard();
+				
+				Pair<int[], Integer> bestPair = minimax(newState, coord, 'X');
+				int comparedValue = Math.max(value, bestPair.getValue());
+				if (value != comparedValue) {
+					value = comparedValue;
+					bestCoord = bestPair.getKey();
+				}
+				
+				break;
 			}
 			
-			return value;
+			return new Pair<>(bestCoord, value);
 		}
 		else {
-			// minimize		
+			// minimize
 			int value = Integer.MAX_VALUE;
-			ArrayList<int[]> coords = board.getAllPossibleActions("X");
+			int[] bestCoord = recentCoord;
+			ArrayList<int[]> coords = state.getAllPossibleActions("X");
 			
-			for ( Board newState : calculateResult(coords, "X") ) {
-				value = Math.min(value, minimax(newState, 'O'));
+			for (int[] coord : coords) {
+				Board newState = calculateResult(state, coord, "X");
+//				System.out.println("new state run in player == \"X\"");
+//				newState.printBoard();
+				
+				Pair<int[], Integer> bestPair = minimax(newState, coord, 'O');
+				int comparedValue = Math.min(value, bestPair.getValue());
+				if (value != comparedValue) {
+					value = comparedValue;
+					bestCoord = bestPair.getKey();
+				}
+				
+				break;
 			}
 			
-			return value;
+			return new Pair<>(bestCoord, value);
 		}
 	}
 	
-	private ArrayList<Board> calculateResult(ArrayList<int[]> coord, String s) {
-		ArrayList<Board> result = new ArrayList<Board>();
+	private Board calculateResult(Board oldState, int[] coord, String s) {		
+		Board newBoard = new Board(oldState);
+		newBoard.setMoveOnCoord(coord[0], coord[1], s);
 		
-		for (int[] arr : coord) {
-			Board newBoard = new Board(board);
-			newBoard.setMove(arr[0], arr[1], s);
-		}
-		
-		return result;
+		return newBoard;
 	}
 	
-	private int calculateValue(Board state) {
+	private Pair<int[], Integer> calculateValue(Board state, int[] recentCoord) {
+		int value;
+		
 		if (state.checkForWin()) {
-			if (state.getTurn() == 'O') return 1;
-			else return -1;
+			if (state.getTurn() == 'O') value = 1;
+			else value = -1;
 		}
 		else {
-			return 0;
+			value = 0;
 		}
+		
+		return new Pair<>(recentCoord, value);
 	}
 	
 	private boolean isTerminal(Board state) {
-		if (board.checkForWin() || board.checkForTie()) return true;
+		if (state.checkForWin() || state.checkForTie()) return true;
 		
 		return false;
 	}

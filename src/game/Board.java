@@ -1,10 +1,9 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import bot.GameBot;
-import javafx.util.Pair;
+//import javafx.util.Pair;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -12,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.util.Pair;
 
 // will represent the Tic-Tac-Toe Board
 public class Board {
@@ -19,7 +19,7 @@ public class Board {
 	private StackPane pane;
 	private Line winLine;
 	
-	private Tile[][] board = new Tile[3][3];
+	private Tile[][] tileBoard = new Tile[3][3];
 	private char turn;
 	private int numOfMoves;					// (for checking ties) count the moves until 9 moves
 	private boolean gameStatus = false;		// true: game is active, false: game is stopped
@@ -47,11 +47,11 @@ public class Board {
 		winLine.setVisible(false);
 	}
 	
-	public Board(Tile[][] board, char turn, int numOfMoves, boolean gameStatus) {
+	public Board(Tile[][] tileBoard, char turn, int numOfMoves, boolean gameStatus) {
 		for (int row = 0; row < 3; row++) {
 	        for (int col = 0; col < 3; col++) {
-	            this.board[row][col] = new Tile();
-	            this.board[row][col].setMove(board[row][col].getMove());
+	            this.tileBoard[row][col] = new Tile();
+	            this.tileBoard[row][col].setMove(tileBoard[row][col].getMove());
 	        }
 	    }
 		this.turn = turn;
@@ -62,17 +62,16 @@ public class Board {
 	public Board(Board board) {
 		for (int row = 0; row < 3; row++) {
 	        for (int col = 0; col < 3; col++) {
-	            this.board[row][col] = new Tile();
-	            this.board[row][col].setMove(board.board[row][col].getMove());
+	            this.tileBoard[row][col] = new Tile();
+	            this.tileBoard[row][col].setMove(board.tileBoard[row][col].getMove());
 	        }
 	    }
 		this.turn = board.turn;
 		this.numOfMoves = board.numOfMoves;
 		this.gameStatus = board.gameStatus;
-		System.out.println("Pane: " + pane);
 	}
 	
-	// helper method: initialize all the tiles into the the board array 
+	// helper method: initialize all the tiles into the the tileBoard array 
 	private void addAllTiles() {
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
@@ -81,7 +80,7 @@ public class Board {
 				tile.getStackPane().setTranslateY((row * Constants.tileHeight) - Constants.tileHeight);
 				pane.getChildren().add(tile.getStackPane());
 				
-				board[row][col] = tile;
+				tileBoard[row][col] = tile;
 			}
 		}
 	}
@@ -92,16 +91,14 @@ public class Board {
 			topContent.setTitle("A TIE!");
 			return true;
 		}
-		System.out.println(numOfMoves); 
+//		System.out.println(numOfMoves); 
 		
-		numOfMoves++;
 		return false;
 	}
 	
 	// main method: checks for the 3 win conditions of the game	
 	public boolean checkForWin() {
 		if (checkRows() || checkCols() || checkDiagonals()) {
-			topContent.setTitle("Player " + turn + " wins!");
 			return true;
 		}
 		return false;
@@ -110,11 +107,11 @@ public class Board {
 	// helper method: check for the win condition for all the rows	
 	private boolean checkRows() {
 		for (int i = 0; i < 3; i++) {
-			if (board[i][0].getMove().equals(board[i][1].getMove())
-					&& board[i][0].getMove().equals(board[i][2].getMove()) 
-					&& !board[i][0].getMove().isEmpty() ) {
+			if (tileBoard[i][0].getMove().equals(tileBoard[i][1].getMove())
+					&& tileBoard[i][0].getMove().equals(tileBoard[i][2].getMove()) 
+					&& !tileBoard[i][0].getMove().isEmpty() ) {
 				System.out.println("someone won on the ROWS!");
-				drawWinLine(board[i][0], board[i][1], board[i][2]);
+				drawWinLine(tileBoard[i][0], tileBoard[i][1], tileBoard[i][2]);
 				return true;
 			}
 		}
@@ -124,11 +121,11 @@ public class Board {
 	// helper method: check for the win condition for all the columns
 	private boolean checkCols() {
 		for (int i = 0; i < 3; i++) {
-			if (board[0][i].getMove().equals(board[1][i].getMove())
-					&& board[0][i].getMove().equals(board[2][i].getMove()) 
-					&& !board[0][i].getMove().isEmpty() ) {
+			if (tileBoard[0][i].getMove().equals(tileBoard[1][i].getMove())
+					&& tileBoard[0][i].getMove().equals(tileBoard[2][i].getMove()) 
+					&& !tileBoard[0][i].getMove().isEmpty() ) {
 				System.out.println("someone won on the COLUMNS!");
-				drawWinLine(board[0][i], board[1][i], board[2][i]);
+				drawWinLine(tileBoard[0][i], tileBoard[1][i], tileBoard[2][i]);
 				return true;
 			}
 		}
@@ -138,20 +135,20 @@ public class Board {
 	// helper method: check for the win condition for the only 2 diagonals
 	private boolean checkDiagonals() {
 		// Top Left to Bottom Right Diagonal		
-		if (board[0][0].getMove().equals(board[1][1].getMove())
-				&& board[0][0].getMove().equals(board[2][2].getMove()) 
-				&& !board[0][0].getMove().isEmpty() ) {
+		if (tileBoard[0][0].getMove().equals(tileBoard[1][1].getMove())
+				&& tileBoard[0][0].getMove().equals(tileBoard[2][2].getMove()) 
+				&& !tileBoard[0][0].getMove().isEmpty() ) {
 			System.out.println("someone won on the DIAGONALS of TL -> BR!");
-			drawWinLine(board[0][0], board[1][1], board[2][2]);
+			drawWinLine(tileBoard[0][0], tileBoard[1][1], tileBoard[2][2]);
 			return true;
 		}
 		
 		// Top Right to Bottom Left Diagonal
-		if (board[0][2].getMove().equals(board[1][1].getMove())
-				&& board[0][2].getMove().equals(board[2][0].getMove()) 
-				&& !board[0][2].getMove().isEmpty() ) {
+		if (tileBoard[0][2].getMove().equals(tileBoard[1][1].getMove())
+				&& tileBoard[0][2].getMove().equals(tileBoard[2][0].getMove()) 
+				&& !tileBoard[0][2].getMove().isEmpty() ) {
 			System.out.println("someone won on the DIAGONALS of TR -> BL!");
-			drawWinLine(board[0][2], board[1][1], board[2][0]);
+			drawWinLine(tileBoard[0][2], tileBoard[1][1], tileBoard[2][0]);
 			return true;
 		}
 		return false;
@@ -159,14 +156,15 @@ public class Board {
 	
 	// main method: after one of the player wins, display a line on the winning 3 tiles 
 	public void drawWinLine(Tile first, Tile second, Tile third) {
-		winLine.setVisible(true);
-		winLine.setStartX(first.getStackPane().getTranslateX());
-		winLine.setStartY(first.getStackPane().getTranslateY());
-		winLine.setEndX(third.getStackPane().getTranslateX());
-		winLine.setEndY(third.getStackPane().getTranslateY());
-		winLine.setTranslateX(second.getStackPane().getTranslateX());
-		winLine.setTranslateY(second.getStackPane().getTranslateY());
-		
+		if (winLine != null) {
+			winLine.setVisible(true);
+			winLine.setStartX(first.getStackPane().getTranslateX());
+			winLine.setStartY(first.getStackPane().getTranslateY());
+			winLine.setEndX(third.getStackPane().getTranslateX());
+			winLine.setEndY(third.getStackPane().getTranslateY());
+			winLine.setTranslateX(second.getStackPane().getTranslateX());
+			winLine.setTranslateY(second.getStackPane().getTranslateY());
+		}
 	}
 	
 	public void startSingleGame() {
@@ -179,7 +177,7 @@ public class Board {
 		
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
-				board[row][col].setMove("");
+				tileBoard[row][col].setMove("");
 			}
 		}
 		
@@ -196,7 +194,7 @@ public class Board {
 		
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
-				board[row][col].setMove("");
+				tileBoard[row][col].setMove("");
 			}
 		}
 		
@@ -205,17 +203,23 @@ public class Board {
 	
 	// main method: will end the game and reset some variables
 	public void endGame() {
+		System.out.println(pane != null);
+		System.out.println(checkForWin());
+		System.out.println(checkForTie());
+		System.out.println(numOfMoves);
+		printBoard();
+		
 		gameStatus = false;
 		isBotActive = false;
 		topContent.setButtonVisibility(true);
-		topContent.setTitle("Tic-Tac-Toe");
+		topContent.setTitle("Player " + turn + " wins!");
 	}
 	
 	/*
 	 * A series of setters
 	 */
-	public void setMove(int row, int col, String s) {
-		board[row][col].setMove(s);
+	public void setMoveOnCoord(int row, int col, String s) {
+		tileBoard[row][col].setMove(s);
 	}
 	
 	/*
@@ -234,19 +238,21 @@ public class Board {
 	}
 	
 	public ArrayList<int[]> getAllPossibleActions(String move) {
-//		ArrayList<Board> result = new ArrayList<Board>();
 		ArrayList<int[]> result = new ArrayList<int[]>();
 		
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 3; col++) {
-				if (board[row][col].getMove().equals("")) {
-//					Board newBoard = new Board(this.board, this.turn, this.numOfMoves, this.gameStatus);
-//					newBoard.board[row][col].setMove(move);
+				if (tileBoard[row][col].getMove().equals("")) {
 					result.add(new int[] {row, col});
+				}
+				
+				else {
+					System.out.println("(" + row + ", " + col + "): " + tileBoard[row][col].getMove() );
+					printBoard();
 				}
 			}
 		}
-		
+		System.out.println("");
 		return result;
 	}
 	
@@ -257,7 +263,7 @@ public class Board {
 		for (int row = 0; row < 3; row++) {
 			System.out.print("[");
 			for (int col = 0; col < 3; col++) {
-				System.out.print( board[row][col].getMove() );
+				System.out.print( tileBoard[row][col].getMove() );
 				
 				if (col < 2) System.out.print( ", " );
 			}
@@ -286,27 +292,53 @@ public class Board {
 			pane.getChildren().add(move);
 				
 			pane.setOnMouseClicked(e -> {
-				if (move.getText().isEmpty() && gameStatus) {
-					if (turn == 'X') {
-						move.setText("X"); 
-						topContent.setTitle("Player O's turn");
-						
-						if (isBotActive) {
-							System.out.println(bot.getNextMove('O'));
-						}
-					}
-					else {
-						if (!isBotActive) {
-							move.setText("O");
-							topContent.setTitle("Player X's turn");
-						}
-					}
-					
-					if (checkForWin() || checkForTie()) endGame();
-					
-					turn = turn == 'X' ? 'O' : 'X';
+				if (isBotActive) {
+					singlePlayerAction();
+				}
+				else {
+					twoPlayerAction();
 				}
 			});
+		}
+		
+		private void singlePlayerAction() {
+			System.out.println("singlePlayerAction() Ran");
+			if (move.getText().isEmpty() && gameStatus) {
+				if (turn == 'X') {
+					move.setText("X"); 
+					topContent.setTitle("Player O's turn");
+					
+					Pair<int[], Integer> nextMove = bot.getNextMove('O');
+					System.out.println("coord X: " + nextMove.getKey()[0]);
+					System.out.println("coord Y: " + nextMove.getKey()[1]);
+					System.out.println("value: " + nextMove.getValue());
+					setMoveOnCoord(nextMove.getKey()[0], nextMove.getKey()[1], "O");
+					topContent.setTitle("Player X's turn");
+				}
+				
+				System.out.println("Does this run?");
+				if (pane != null && (checkForWin() || checkForTie()) ) endGame();
+				numOfMoves++;
+			}
+		}
+		
+		private void twoPlayerAction() {
+			System.out.println("twoPlayerAction() Ran");
+			if (move.getText().isEmpty() && gameStatus) {
+				if (turn == 'X') {
+					move.setText("X"); 
+					topContent.setTitle("Player O's turn");
+				}
+				else {
+					move.setText("O");
+					topContent.setTitle("Player X's turn");
+				}
+				
+				if (checkForWin() || checkForTie() ) endGame();
+				
+				numOfMoves++;
+				turn = turn == 'X' ? 'O' : 'X';
+			}
 		}
 		
 		public StackPane getStackPane() {
