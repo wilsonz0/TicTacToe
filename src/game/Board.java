@@ -21,7 +21,6 @@ public class Board {
 	
 	private Tile[][] tileBoard = new Tile[3][3];
 	private char turn;
-	private int numOfMoves;					// (for checking ties) count the moves until 9 moves
 	private boolean gameStatus = false;		// true: game is active, false: game is stopped
 	
 	GameBot bot;
@@ -47,7 +46,7 @@ public class Board {
 		winLine.setVisible(false);
 	}
 	
-	public Board(Tile[][] tileBoard, char turn, int numOfMoves, boolean gameStatus) {
+	public Board(Tile[][] tileBoard, char turn, boolean gameStatus) {
 		for (int row = 0; row < 3; row++) {
 	        for (int col = 0; col < 3; col++) {
 	            this.tileBoard[row][col] = new Tile();
@@ -55,7 +54,6 @@ public class Board {
 	        }
 	    }
 		this.turn = turn;
-		this.numOfMoves = numOfMoves;
 		this.gameStatus = gameStatus;
 	}
 	
@@ -67,7 +65,6 @@ public class Board {
 	        }
 	    }
 		this.turn = board.turn;
-		this.numOfMoves = board.numOfMoves;
 		this.gameStatus = board.gameStatus;
 	}
 	
@@ -85,15 +82,15 @@ public class Board {
 		}
 	}
 	
-	// main method: after 9 moves, there will be a tie iff there are no wins (handled in Tile class)
+	// main method: if all the position is NOT empty then there is a tie
 	public boolean checkForTie() {
-		if (numOfMoves == 9) {
-			topContent.setTitle("A TIE!");
-			return true;
+		for (int row = 0; row < 3; row++) {
+			for (int col = 0; col < 3; col++) {
+				if (tileBoard[row][col].getMove().isEmpty()) return false;
+			}
 		}
-//		System.out.println(numOfMoves); 
 		
-		return false;
+		return true;
 	}
 	
 	// main method: checks for the 3 win conditions of the game	
@@ -171,7 +168,6 @@ public class Board {
 		gameStatus = true;
 		isBotActive = true;
 		turn  = 'X';
-		numOfMoves = 1;
 		topContent.setTitle("Player X's turn");
 		topContent.setButtonVisibility(false);
 		
@@ -188,7 +184,6 @@ public class Board {
 	public void startDoubleGame() {
 		gameStatus = true;
 		turn  = 'X';
-		numOfMoves = 1;
 		topContent.setTitle("Player X's turn");
 		topContent.setButtonVisibility(false);
 		
@@ -206,13 +201,17 @@ public class Board {
 		System.out.println(pane != null);
 		System.out.println(checkForWin());
 		System.out.println(checkForTie());
-		System.out.println(numOfMoves);
 		printBoard();
 		
 		gameStatus = false;
 		isBotActive = false;
 		topContent.setButtonVisibility(true);
-		topContent.setTitle("Player " + turn + " wins!");
+		if (checkForTie()) {
+			topContent.setTitle("A TIE!");
+		}
+		else {
+			topContent.setTitle("Player " + turn + " wins!");
+		}
 	}
 	
 	/*
@@ -318,7 +317,6 @@ public class Board {
 				
 				System.out.println("Does this run?");
 				if (pane != null && (checkForWin() || checkForTie()) ) endGame();
-				numOfMoves++;
 			}
 		}
 		
@@ -336,7 +334,6 @@ public class Board {
 				
 				if (checkForWin() || checkForTie() ) endGame();
 				
-				numOfMoves++;
 				turn = turn == 'X' ? 'O' : 'X';
 			}
 		}
