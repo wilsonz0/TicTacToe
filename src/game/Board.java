@@ -46,17 +46,6 @@ public class Board {
 		winLine.setVisible(false);
 	}
 	
-	public Board(Tile[][] tileBoard, char turn, boolean gameStatus) {
-		for (int row = 0; row < 3; row++) {
-	        for (int col = 0; col < 3; col++) {
-	            this.tileBoard[row][col] = new Tile();
-	            this.tileBoard[row][col].setMove(tileBoard[row][col].getMove());
-	        }
-	    }
-		this.turn = turn;
-		this.gameStatus = gameStatus;
-	}
-	
 	public Board(Board board) {
 		for (int row = 0; row < 3; row++) {
 	        for (int col = 0; col < 3; col++) {
@@ -107,7 +96,7 @@ public class Board {
 			if (tileBoard[i][0].getMove().equals(tileBoard[i][1].getMove())
 					&& tileBoard[i][0].getMove().equals(tileBoard[i][2].getMove()) 
 					&& !tileBoard[i][0].getMove().isEmpty() ) {
-				System.out.println("someone won on the ROWS!");
+//				System.out.println("someone won on the ROWS!");
 				drawWinLine(tileBoard[i][0], tileBoard[i][1], tileBoard[i][2]);
 				return true;
 			}
@@ -121,7 +110,7 @@ public class Board {
 			if (tileBoard[0][i].getMove().equals(tileBoard[1][i].getMove())
 					&& tileBoard[0][i].getMove().equals(tileBoard[2][i].getMove()) 
 					&& !tileBoard[0][i].getMove().isEmpty() ) {
-				System.out.println("someone won on the COLUMNS!");
+//				System.out.println("someone won on the COLUMNS!");
 				drawWinLine(tileBoard[0][i], tileBoard[1][i], tileBoard[2][i]);
 				return true;
 			}
@@ -135,7 +124,7 @@ public class Board {
 		if (tileBoard[0][0].getMove().equals(tileBoard[1][1].getMove())
 				&& tileBoard[0][0].getMove().equals(tileBoard[2][2].getMove()) 
 				&& !tileBoard[0][0].getMove().isEmpty() ) {
-			System.out.println("someone won on the DIAGONALS of TL -> BR!");
+//			System.out.println("someone won on the DIAGONALS of TL -> BR!");
 			drawWinLine(tileBoard[0][0], tileBoard[1][1], tileBoard[2][2]);
 			return true;
 		}
@@ -144,7 +133,7 @@ public class Board {
 		if (tileBoard[0][2].getMove().equals(tileBoard[1][1].getMove())
 				&& tileBoard[0][2].getMove().equals(tileBoard[2][0].getMove()) 
 				&& !tileBoard[0][2].getMove().isEmpty() ) {
-			System.out.println("someone won on the DIAGONALS of TR -> BL!");
+//			System.out.println("someone won on the DIAGONALS of TR -> BL!");
 			drawWinLine(tileBoard[0][2], tileBoard[1][1], tileBoard[2][0]);
 			return true;
 		}
@@ -164,6 +153,7 @@ public class Board {
 		}
 	}
 	
+	// main method: allows the game to start and restart the singleplayer game mode
 	public void startSingleGame() {
 		gameStatus = true;
 		isBotActive = true;
@@ -180,7 +170,7 @@ public class Board {
 		winLine.setVisible(false);
 	}
 	
-	// main method: allows the game to start and restart
+	// main method: allows the game to start and restart the two-player game mode
 	public void startDoubleGame() {
 		gameStatus = true;
 		turn  = 'X';
@@ -198,9 +188,6 @@ public class Board {
 	
 	// main method: will end the game and reset some variables
 	public void endGame() {
-		System.out.println(pane != null);
-		System.out.println(checkForWin());
-		System.out.println(checkForTie());
 		printBoard();
 		
 		gameStatus = false;
@@ -244,14 +231,9 @@ public class Board {
 				if (tileBoard[row][col].getMove().equals("")) {
 					result.add(new int[] {row, col});
 				}
-				
-				else {
-					System.out.println("(" + row + ", " + col + "): " + tileBoard[row][col].getMove() );
-					printBoard();
-				}
 			}
 		}
-		System.out.println("");
+		
 		return result;
 	}
 	
@@ -263,6 +245,7 @@ public class Board {
 			System.out.print("[");
 			for (int col = 0; col < 3; col++) {
 				System.out.print( tileBoard[row][col].getMove() );
+				if (tileBoard[row][col].getMove().isEmpty()) System.out.print("-");
 				
 				if (col < 2) System.out.print( ", " );
 			}
@@ -300,26 +283,38 @@ public class Board {
 			});
 		}
 		
+		/*
+		 *  when triggered the method will set the position of the X that the player chose
+		 *  and clicked. Then, the bot method will be called to find the next bot move based
+		 *  on the implemented algorithm.
+		 */
+		
 		private void singlePlayerAction() {
 			System.out.println("singlePlayerAction() Ran");
 			if (move.getText().isEmpty() && gameStatus) {
 				if (turn == 'X') {
 					move.setText("X"); 
 					topContent.setTitle("Player O's turn");
-					
-					Pair<int[], Integer> nextMove = bot.getNextMove('O');
-					System.out.println("coord X: " + nextMove.getKey()[0]);
-					System.out.println("coord Y: " + nextMove.getKey()[1]);
-					System.out.println("value: " + nextMove.getValue());
-					setMoveOnCoord(nextMove.getKey()[0], nextMove.getKey()[1], "O");
-					topContent.setTitle("Player X's turn");
+
+					if (pane != null && (checkForWin() || checkForTie()) ) {
+						endGame();
+					}
+					else {
+						Pair<int[], Integer> nextMove = bot.getNextMove('O');
+						setMoveOnCoord(nextMove.getKey()[0], nextMove.getKey()[1], "O");
+						topContent.setTitle("Player X's turn");
+						System.out.println("coord X: " + nextMove.getKey()[0]);
+						System.out.println("coord Y: " + nextMove.getKey()[1]);
+						System.out.println("value: " + nextMove.getValue());
+					}
 				}
-				
-				System.out.println("Does this run?");
-				if (pane != null && (checkForWin() || checkForTie()) ) endGame();
 			}
 		}
 		
+		/*
+		 * when triggered, the method will place the X or O on the position that the player
+		 * chose and clicked.
+		 */
 		private void twoPlayerAction() {
 			System.out.println("twoPlayerAction() Ran");
 			if (move.getText().isEmpty() && gameStatus) {
