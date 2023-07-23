@@ -193,11 +193,11 @@ public class Board {
 		gameStatus = false;
 		isBotActive = false;
 		topContent.setButtonVisibility(true);
-		if (checkForTie()) {
-			topContent.setTitle("A TIE!");
+		if (checkForWin()) {
+			topContent.setTitle("Player " + turn + " wins!");
 		}
 		else {
-			topContent.setTitle("Player " + turn + " wins!");
+			topContent.setTitle("A TIE!");
 		}
 	}
 	
