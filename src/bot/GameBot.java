@@ -1,6 +1,7 @@
 package bot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import game.Board;
 import javafx.util.Pair;
@@ -19,11 +20,11 @@ public class GameBot {
 	}
 	
 	public Pair<int[], Integer> getNextMove(char player) {
-		return minimax(board, new int[] {0,0}, player);
+		return minimax(board, new int[] {0,0}, player, 2);
 	}
 	
-	private Pair<int[], Integer> minimax(Board state, int[] recentCoord, char player) {
-		if (isTerminal(state)) return calculateValue(state, recentCoord);
+	private Pair<int[], Integer> minimax(Board state, int[] recentCoord, char player, int depth) {
+		if (depth < 1 || isTerminal(state)) return calculateValue(state, recentCoord);
 		
 		if (player == 'O') {
 			// maximize
@@ -33,17 +34,20 @@ public class GameBot {
 			
 			for (int[] coord : coords) {
 				Board newState = calculateResult(state, coord, "O");
-//				System.out.println("new state run in player == \"O\"");
-//				newState.printBoard();
+				System.out.println("DEPTH: " + depth + " - new state run in player == \"O\"");
+				newState.printBoard();
 				
-				Pair<int[], Integer> bestPair = minimax(newState, coord, 'X');
+				Pair<int[], Integer> bestPair = minimax(newState, coord, 'X', depth - 1);
 				int comparedValue = Math.max(value, bestPair.getValue());
-				if (value != comparedValue) {
+				if (value < comparedValue) {
 					value = comparedValue;
 					bestCoord = bestPair.getKey();
+					
+					System.out.println("best maximizing");
+					newState.printBoard();
+					System.out.println("value: " + value);
+					System.out.println("bestCoord: " + Arrays.toString(bestCoord));
 				}
-				
-				break;
 			}
 			
 			return new Pair<>(bestCoord, value);
@@ -56,17 +60,20 @@ public class GameBot {
 			
 			for (int[] coord : coords) {
 				Board newState = calculateResult(state, coord, "X");
-//				System.out.println("new state run in player == \"X\"");
-//				newState.printBoard();
+				System.out.println("DEPTH: " + depth + " - new state run in player == \"X\"");
+				newState.printBoard();
 				
-				Pair<int[], Integer> bestPair = minimax(newState, coord, 'O');
+				Pair<int[], Integer> bestPair = minimax(newState, coord, 'O', depth - 1);
 				int comparedValue = Math.min(value, bestPair.getValue());
-				if (value != comparedValue) {
+				if (value > comparedValue) {
 					value = comparedValue;
 					bestCoord = bestPair.getKey();
+					
+//					System.out.println("best minimizing");
+//					newState.printBoard();
+//					System.out.println("value: " + value);
+//					System.out.println("bestCoord: " + Arrays.toString(bestCoord));
 				}
-				
-				break;
 			}
 			
 			return new Pair<>(bestCoord, value);
