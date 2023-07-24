@@ -1,7 +1,6 @@
 package bot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import game.Board;
 import javafx.util.Pair;
@@ -41,12 +40,12 @@ public class GameBot {
 				int comparedValue = Math.max(value, bestPair.getValue());
 				if (value < comparedValue) {
 					value = comparedValue;
-					bestCoord = bestPair.getKey();
+					bestCoord = coord;
 					
-					System.out.println("best maximizing");
-					newState.printBoard();
-					System.out.println("value: " + value);
-					System.out.println("bestCoord: " + Arrays.toString(bestCoord));
+//					System.out.println("best maximizing");
+//					newState.printBoard();
+//					System.out.println("value: " + value);
+//					System.out.println("bestCoord: " + Arrays.toString(bestCoord));
 				}
 			}
 			
@@ -67,7 +66,7 @@ public class GameBot {
 				int comparedValue = Math.min(value, bestPair.getValue());
 				if (value > comparedValue) {
 					value = comparedValue;
-					bestCoord = bestPair.getKey();
+					bestCoord = coord;
 					
 //					System.out.println("best minimizing");
 //					newState.printBoard();
